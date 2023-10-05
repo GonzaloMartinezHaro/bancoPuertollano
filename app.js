@@ -38,6 +38,13 @@ formulario.addEventListener("submit", function (event) {
         error.style.display = "block";
         mensajeCorrecto.style.display = "none";
         return;
+    }else{
+        
+    mensajeCorrecto.style.color = "green";
+    mensajeCorrecto.style.display = "block";
+    mensajeCorrecto.textContent = "Guardado correctamente";
+    error.style.display = "none";
+
     }
 
     // Crea un objeto con los nuevos datos del usuario.
