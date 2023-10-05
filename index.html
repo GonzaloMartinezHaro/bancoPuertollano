@@ -13,6 +13,27 @@
             <li><a href="tarjetas.html">Tarjetas</a></li>
         </ul>
     </div>
+
+    <form id = "formulario">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required><br><br>
+        
+        <label for="primer_apellido">Primer Apellido:</label>
+        <input type="text" id="primer_apellido" name="primer_apellido" placeholder="Ingresa tu primer apellido" required><br><br>
+        
+        <label for="segundo_apellido">Segundo Apellido:</label>
+        <input type="text" id="segundo_apellido" name="segundo_apellido" placeholder="Ingresa tu segundo apellido" required><br><br>
+        
+        <label for="nacionalidad">Nacionalidad:</label>
+        <input type="text" id="nacionalidad" name="nacionalidad" placeholder="Ingresa tu nacionalidad" required><br><br>
+
+        <input type="submit" value="Modificar Datos">
+    </form>
+
+
+    <p id="mensajeCorrecto"></p>
+    <p id="error"></p>
+
         
 <script src="app.js">
 
