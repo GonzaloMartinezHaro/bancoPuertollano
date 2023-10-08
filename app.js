@@ -130,7 +130,7 @@ sessionStorage.setItem("datosSaldo", JSON.stringify(datosSaldo));
 
 
 
- //ParteDatos
+ //ParteUno
  //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -150,7 +150,7 @@ var error = document.getElementById("error");
 
 
 // Verifica si hay datos de usuario almacenados en la sesión.
-if (sessionStorage.getItem("datosUsuario")) {
+if (sessionStorage.getItem("datosUsuario") != null) {
     const datosUsuario = JSON.parse(sessionStorage.getItem("datosUsuario"));
     // Rellena los campos de texto con los datos del usuario.
     nombreTexto.value = datosUsuario.nombre;
@@ -159,9 +159,9 @@ if (sessionStorage.getItem("datosUsuario")) {
     nacionalidadTexto.value = datosUsuario.nacionalidad;
 }
 
-// Agrega un controlador de eventos al formulario para manejar la modificación de datos.
-formulario.addEventListener("submit", function (event) {
-    event.preventDefault();
+
+    document.getElementById("agregarDatos").addEventListener("click", function () {
+   
     // Obtiene los valores de los campos de texto.
     const nombre = nombreTexto.value;
     const primerApellido = primerApellidoTexto.value;
@@ -175,14 +175,14 @@ formulario.addEventListener("submit", function (event) {
         segundoApellido.length < 3 || segundoApellido.length > 20 ||
         nacionalidad.length < 3 || nacionalidad.length > 15) {
         // Muestra el mensaje de error en rojo.
-        error.textContent = "Error: Verifica las validaciones";
+        error.style.color = "red";
+        error.textContent = "Error: Compruebe que ha rellenado correctamente los campos";
         error.style.display = "block";
         mensajeCorrecto.style.display = "none";
         return;
     }else{
         
     mensajeCorrecto.style.color = "green";
-    mensajeCorrecto.style.display = "block";
     mensajeCorrecto.textContent = "Guardado correctamente";
     error.style.display = "none";
 
@@ -202,14 +202,8 @@ formulario.addEventListener("submit", function (event) {
 
 
     mensajeCorrecto.style.color = "green";
-    mensajeCorrecto.style.display = "block";
     mensajeCorrecto.textContent = "Guardado correctamente";
-
-  
-
-    // Puedes agregar aquí cualquier otra lógica que necesites, como enviar los datos a un servidor.
-
-    // No es necesario actualizar los cuadros de texto ya que se han modificado directamente.
+   
 });
     
  } catch (error) {
@@ -218,45 +212,99 @@ formulario.addEventListener("submit", function (event) {
 
 
 
-
-// function cargarDatos(){
-    
-  
-
-//     if (typeof datosUsuario !== 'undefined') {
-
-//         datosDinero = {
-
-//             iban : 1234,
-//             saldo : 500,
-//             mensaje : 'asdf',
-
-//         }
-
-//         document.getElementById('nombre').value = datosUsuario.nombre || '';
-//         document.getElementById('primer_apellido').value = datosUsuario.primer_apellido || '';
-//         document.getElementById('segundo_apellido').value = datosUsuario.segundo_apellido || '';
-//         document.getElementById('nacionalidad').value = datosUsuario.nacionalidad || '';
-        
-//         document.getElementById("iban").value = datosDinero.iban || '';
-//         document.getElementById("saldo").value = datosDinero.saldo || '';
-//         document.getElementById("mensaje").value = datosDinero.mensaje || '';
-//     } else {
-//         // Maneja el caso en el que 'persona' no esté definida
-//         console.error('La variable "datosUsuario" no está definida');
-//     }
-    
-// }
-
-
-
-//     function cargarCabecera(dest){  
-//     document.getElementById(dest).innerHTML = '   <h1>BancoPuertollano</h1>    <ul>        <li><a href="index.html">Inicio</a></li>        <li><a href="infoCuenta.html">Informaci&#243;n Cuenta</a></li>             <li><a href="tarjetas.html">Tarjetas</a></li>    </ul>' 
-//  }
-
-
-
-
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//INFO CUENTA
+//Parte3
+
+    
+    
+
+    var formulario = document.getElementById("formularioTarjeta");
+    var listaTarjetas = document.getElementById("listaTarjetas");
+    var mensajeCorrecto2 = document.getElementById("mensajeCorrecto2");
+    var error2 = document.getElementById("error2");
+
+    // Cargar tarjetas predefinidas
+
+    
+    if(sessionStorage.getItem("tarjetas") === null){
+        var Tarjeta1 = {
+            numeroTarjeta :'1234 12345 123456' ,
+            cvv : 123,
+            tarjetaActiva: 'Si'
+        };
+        guardarTarjetaEnSessionStorage(Tarjeta1)
+        
+    
+        var Tarjeta2 = {
+            numeroTarjeta :'1234 12345 123456' ,
+            cvv : '123',
+            tarjetaActiva: 'No'
+        };
+        guardarTarjetaEnSessionStorage(Tarjeta2)
+        
+
+    }
+ 
+
+    cargarTarjetasDesdeSessionStorage();
+
+    document.getElementById("agregarTarjeta").addEventListener("click", function () {
+        const numeroTarjeta = document.getElementById("numeroTarjeta").value;
+        const cvv = document.getElementById("cvv").value;
+        const tarjetaActiva = document.getElementById("tarjetaActiva").checked;
+
+        // Validar y agregar la tarjeta a la tabla y a SessionStorage
+        if (cvv == "" || numeroTarjeta == "") {
+            error2.textContent = "Rellene los campos";
+        } else if (cvv.length>3 || cvv.length<3) {
+            error2.textContent = "el cvv debe contener 3 digitos";
+           
+        } else if (numeroTarjeta.length> 17 || numeroTarjeta.length<17) {
+            error2.textContent = "El formato del numero de la tarjeta es incorrecto";
+           
+        }
+        else{
+            const nuevaTarjeta = document.createElement("tr");
+            nuevaTarjeta.innerHTML = `
+                <td>${ibanDefault}</td>
+                <td>${numeroTarjeta}</td>
+                <td>${tarjetaActiva ? "Sí" : "No"}</td>
+            `;
+            listaTarjetas.appendChild(nuevaTarjeta);
+
+            // Guardar la tarjeta en SessionStorage
+            guardarTarjetaEnSessionStorage({
+                numeroTarjeta,
+                cvv,
+                tarjetaActiva
+            });
+
+            // Limpiar el formulario después de agregar la tarjeta
+            formulario.reset();
+            
+            error2.textContent = "";
+            }
+        }
+    );
+
+    // Función para guardar la tarjeta en SessionStorage
+    function guardarTarjetaEnSessionStorage(tarjeta) {
+        let tarjetasGuardadas = JSON.parse(sessionStorage.getItem("tarjetas")) || [];
+        tarjetasGuardadas.push(tarjeta);
+        sessionStorage.setItem("tarjetas", JSON.stringify(tarjetasGuardadas));
+    }
+
+    // Función para cargar las tarjetas almacenadas en SessionStorage
+    function cargarTarjetasDesdeSessionStorage() {
+        const tarjetasGuardadas = JSON.parse(sessionStorage.getItem("tarjetas")) || [];
+        tarjetasGuardadas.forEach(tarjeta => {
+            const nuevaTarjeta = document.createElement("tr");
+            nuevaTarjeta.innerHTML = `
+                <td>${ibanDefault}</td>
+                <td>${tarjeta.numeroTarjeta}</td>
+                <td>${tarjeta.tarjetaActiva ? "Sí" : "No"}</td>
+            `;
+            listaTarjetas.appendChild(nuevaTarjeta);
+        });
+    }
